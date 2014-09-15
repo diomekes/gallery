@@ -9,6 +9,4 @@ Requires:
 ---------
 [Magnific-Popup](http://dimsemenov.com/plugins/magnific-popup/)
 
-[thumb](http://marginalhacks.com/Hacks/thumb/) for photo thumbnails
-
 ffmpeg for video thumbnails

@@ -1,20 +1,19 @@
 #!/bin/bash
 
 thumbgeom="240x240"
-thumbext="jpg"
 thumbdir="tn"
-script=$(basename $0)
+script=$(basename "$0")
 
 main () {
 cwd=$(pwd)
-find . -type d \( -path '*/\.*' -o -path '*/tn' \) -prune -o -type d -print | sed -e 's/.//' -e 's/\///' | sort | while IFS= read -r cdir
+find . -type d \( -path '*/\.*' -o -path '*/'"${thumbdir}" \) -prune -o -type d -print | sed -e 's/.//' -e 's/\///' | sort | while IFS= read -r cdir
   do
     cd "${cdir}"
-    title=$(awk -F / '{print $NF}' <<< ${cdir})
-    css=$(sed -e 's/\/[^\/]*/\/../g' -e 's/.\///' <<< ${cdir})
-    depth=$(awk -F / '{print NF}' <<< ${cdir})
+    title=$(awk -F / '{print $NF}' <<< "${cdir}")
+    css=$(sed -e 's/\/[^\/]*/\/../g' -e 's/.\///' <<< "${cdir}")
+    depth=$(awk -F / '{print NF}' <<< "${cdir}")
     dots=$(printf "%0.s../" $(seq $depth))
-    files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name ${script} ! -name README.md)
+    files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name "${script}" ! -name README.md)
     echo "Indexing $(pwd)"
     header
     images
@@ -73,7 +72,7 @@ breadcrumbs () {
 }
 
 directories () {
-   find . -maxdepth 1 -type d ! -name ".*" ! -name "tn" | sed -e 's/.//' -e 's/\///' | sort -rh | while IFS= read -r dir
+   find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -rh | while IFS= read -r dir
       do
 	date=$(awk -F _ '{print $1}' <<< "${dir}")
 	place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /')
@@ -85,7 +84,7 @@ directories () {
         fi
             echo "        </a>" >> index.html
         echo '        <ul>' >> index.html
-        find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "tn" | sort -h | while IFS= read -r subdir
+        find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sort -h | while IFS= read -r subdir
           do
             basedir=$(basename "${subdir}")
             echo "          <li><a href=\"${subdir}\">${basedir}</a></li>" >> index.html
@@ -98,36 +97,43 @@ directories () {
 images () {
     if [[ $files ]]
       then
+        if [ ! -d "${thumbdir}" ]
+	  then
+            mkdir "${thumbdir}"
+        fi
         echo '    <div class="thumb">' >> index.html
         for img in *
           do
             if [[ "$img" = *.jpg ]] || [[ "$img" = *.png ]] || [[ "$img" = *.gif ]]
               then
-                tn=$(thumb -geom "$thumbgeom" -type "$thumbext" -dir "$thumbdir" -crop "$img")
+		base="${img%.*}"
+		ext="${img##*.}"
+		tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}" && echo "${thumbdir}/${base}.${thumbdir}.${ext}")
                 echo "      <a href=\"${img}\"><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogv ]]
               then
                 ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${img}.jpg" < /dev/null 
-                tn=$(thumb -geom "$thumbgeom" -type "$thumbext" -dir "$thumbdir" -crop "${img}.jpg")
+		base="${img%.*}"
+		tn=$(convert "${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg" && echo "${thumbdir}/${base}.${thumbdir}.jpg")
                 rm "${img}.jpg"
-                echo '<!DOCTYPE html>' > "tn/${img}.html"
-                echo '<html lang="en">' >> "tn/${img}.html"
-                echo '  <head>' >> "tn/${img}.html"
-                echo "    <title>pics from ${title}</title>" >> "tn/${img}.html"
-                echo '    <meta charset="utf-8" />' >> "tn/${img}.html"
-                echo '        <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> "tn/${img}.html"
-                echo "    <link href=\"../${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> "tn/${img}.html"
-                echo '  </head>' >> "tn/${img}.html"
-                echo '  <body>' >> "tn/${img}.html"
-                echo '      <header>' >> "tn/${img}.html"
-                echo '      </header>' >> "tn/${img}.html"
-                echo '      <div class="full">' >> "tn/${img}.html"
-                echo "        <a href=\"tn/${img}.html\" class=\"mfp-iframe\"><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
-                echo "        <video src=\"../${img}\" controls>Your browser does not support the video tag</video>" >> "tn/${img}.html"
-                echo '      </div>' >> "tn/${img}.html"
-                echo '  </body>' >> "tn/${img}.html"
-                echo '</html>' >> "tn/${img}.html"
+                echo '<!DOCTYPE html>' > "${thumbdir}/${img}.html"
+                echo '<html lang="en">' >> "${thumbdir}/${img}.html"
+                echo '  <head>' >> "${thumbdir}/${img}.html"
+                echo "    <title>pics from ${title}</title>" >> "${thumbdir}/${img}.html"
+                echo '    <meta charset="utf-8" />' >> "${thumbdir}/${img}.html"
+                echo '        <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> "${thumbdir}/${img}.html"
+                echo "    <link href=\"../${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> "${thumbdir}/${img}.html"
+                echo '  </head>' >> "${thumbdir}/${img}.html"
+                echo '  <body>' >> "${thumbdir}/${img}.html"
+                echo '      <header>' >> "${thumbdir}/${img}.html"
+                echo '      </header>' >> "${thumbdir}/${img}.html"
+                echo '      <div class="full">' >> "${thumbdir}/${img}.html"
+                echo "        <a href=\"${thumbdir}/${img}.html\" class=\"mfp-iframe\"><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
+                echo "        <video src=\"../${img}\" controls>Your browser does not support the video tag</video>" >> "${thumbdir}/${img}.html"
+                echo '      </div>' >> "${thumbdir}/${img}.html"
+                echo '  </body>' >> "${thumbdir}/${img}.html"
+                echo '</html>' >> "${thumbdir}/${img}.html"
             fi
             if [[ "$img" = *.ogg ]]
               then
@@ -157,7 +163,7 @@ images () {
 }
 
 footer () {
-    depth=$(awk -F / '{print NF}' <<< ${cdir})
+    depth=$(awk -F / '{print NF}' <<< "${cdir}")
     echo '    </div>' >> index.html
     echo '    <footer>' >> index.html
     breadcrumbs

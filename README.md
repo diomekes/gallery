@@ -10,3 +10,5 @@ Requires:
 [Magnific-Popup](http://dimsemenov.com/plugins/magnific-popup/)
 
 ffmpeg for video thumbnails
+
+convert from ImageMagick

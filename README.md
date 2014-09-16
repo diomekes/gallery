@@ -1,4 +1,4 @@
-albino
+gallery
 ======
 
 HTML5 Responsive Static Photo Album Generator

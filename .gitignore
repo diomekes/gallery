@@ -4,5 +4,5 @@
 # But not these files...
 !.gitignore
 !README.md
-!albino
+!gallery
 !.*

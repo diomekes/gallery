@@ -6,7 +6,7 @@ script=$(basename "$0")
 
 main () {
 cwd=$(pwd)
-find . -type d \( -path '*/\.*' -o -path '*/'"${thumbdir}" \) -prune -o -type d -print | sed -e 's/.//' -e 's/\///' | sort | while IFS= read -r cdir
+find . -type d \( -path '*/\.*' -o -path "*/${thumbdir}" \) -prune -o -type d -print | sed -e 's/.//' -e 's/\///' | sort | while IFS= read -r cdir
   do
     cd "${cdir}"
     title=$(awk -F / '{print $NF}' <<< "${cdir}")

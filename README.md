@@ -7,7 +7,7 @@ Simple bash script that creates a static HTML index file in each subdirectory wi
 
 Requires:
 ---------
-[blueimp Gallery](https://github/blueimp/Gallery/)
+[blueimp Gallery](https://github.com/blueimp/Gallery/)
 
 ffmpeg for video thumbnails
 

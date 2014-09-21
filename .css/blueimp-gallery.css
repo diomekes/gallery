@@ -67,14 +67,14 @@
     transition: opacity .5s linear;
 }
 .blueimp-gallery>.slides>.slide-loading {
-    background: url(../img/loading.gif) center no-repeat;
+    background: url(../.img/loading.gif) center no-repeat;
     background-size: 64px 64px;
 }
 .blueimp-gallery>.slides>.slide-loading>.slide-content {
     opacity: 0;
 }
 .blueimp-gallery>.slides>.slide-error {
-    background: url(../img/error.png) center no-repeat;
+    background: url(../.img/error.png) center no-repeat;
 }
 .blueimp-gallery>.slides>.slide-error>.slide-content {
     display: none;
@@ -138,7 +138,7 @@
     bottom: 15px;
     width: 15px;
     height: 15px;
-    background: url(../img/play-pause.png) 0 0 no-repeat;
+    background: url(../.img/play-pause.png) 0 0 no-repeat;
     cursor: pointer;
     opacity: .5;
     display: none;
@@ -169,13 +169,13 @@
     user-select: none;
 }
 body:last-child .blueimp-gallery>.slides>.slide-error {
-    background-image: url(../img/error.svg);
+    background-image: url(../.img/error.svg);
 }
 body:last-child .blueimp-gallery>.play-pause {
     width: 20px;
     height: 20px;
     background-size: 40px 20px;
-    background-image: url(../img/play-pause.svg);
+    background-image: url(../.img/play-pause.svg);
 }
 body:last-child .blueimp-gallery-playing>.play-pause {
     background-position: -20px 0;
@@ -281,7 +281,7 @@ body:last-child .blueimp-gallery-playing>.play-pause {
     margin: -64px auto 0;
     width: 128px;
     height: 128px;
-    background: url(../img/video-play.png) center no-repeat;
+    background: url(../.img/video-play.png) center no-repeat;
     opacity: .8;
     cursor: pointer;
 }
@@ -298,11 +298,11 @@ body:last-child .blueimp-gallery-playing>.play-pause {
     display: block;
 }
 .blueimp-gallery>.slides>.slide>.video-loading>a {
-    background: url(../img/loading.gif) center no-repeat;
+    background: url(../.img/loading.gif) center no-repeat;
     background-size: 64px 64px;
 }
 body:last-child .blueimp-gallery>.slides>.slide>.video-content:not(.video-loading)>a {
-    background-image: url(../img/video-play.svg);
+    background-image: url(../.img/video-play.svg);
 }
 *+html .blueimp-gallery>.slides>.slide>.video-content {
     height: 100%}

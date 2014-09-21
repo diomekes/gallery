@@ -33,14 +33,10 @@ header () {
     if [[ $depth = 0 ]]
       then  
         echo "    <link href=\".css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
-        echo "    <link href=\".css/popup.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
-        echo "    <script type=\"text/javascript\" src=\".js/jquery-1.11.0.min.js\"></script>" >> index.html
-        echo "    <script type=\"text/javascript\" src=\".js/popup.min.js\"></script>" >> index.html
+        echo "    <link href=\".css/blueimp-gallery.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
       else
         echo "    <link href=\"${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
-        echo "    <link href=\"${dots}.css/popup.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
-        echo "    <script src=\"${dots}.js/jquery-1.11.0.min.js\"></script>" >> index.html
-        echo "    <script src=\"${dots}.js/popup.min.js\"></script>" >> index.html
+        echo "    <link href=\"${dots}.css/blueimp-gallery.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
     fi
     echo '  </head>' >> index.html
     echo '  <body>' >> index.html
@@ -64,7 +60,7 @@ breadcrumbs () {
         popd > /dev/null 2>&1
         echo "        <li class=\"crumb\"><a href=\"$dots\">${here}</a></li>" >> index.html
         echo "        <li class=\"crumb\">// </li>" >> index.html
-        (( depth = $depth-1 ))
+        depth=$(( depth = $depth-1 ))
     done
         echo "        <li class=\"crumb title\">${title}</li>" >> index.html
         echo '      </ul>' >> index.html
@@ -101,7 +97,16 @@ images () {
 	  then
             mkdir "${thumbdir}"
         fi
-        echo '    <div class="thumb">' >> index.html
+        echo '      <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">' >> index.html
+        echo '        <div class="slides"></div>' >> index.html
+        echo '        <h3 class="title">Links</h3>' >> index.html
+        echo '        <a class="prev">‹</a>' >> index.html
+        echo '        <a class="next">›</a>' >> index.html
+        echo '        <a class="close">×</a>' >> index.html
+        echo '        <a class="play-pause"></a>' >> index.html
+        echo '        <ol class="indicator"></ol>' >> index.html
+        echo '      </div>' >> index.html
+        echo '    <div id="links">' >> index.html
         for img in *
           do
             if [[ "$img" = *.jpg ]] || [[ "$img" = *.png ]] || [[ "$img" = *.gif ]]
@@ -109,31 +114,14 @@ images () {
 		base="${img%.*}"
 		ext="${img##*.}"
 		tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}" && echo "${thumbdir}/${base}.${thumbdir}.${ext}")
-                echo "      <a href=\"${img}\"><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
+                echo "      <a href=\"${img}\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogv ]]
               then
-                ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${img}.jpg" < /dev/null 
+                ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		base="${img%.*}"
-		tn=$(convert "${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg" && echo "${thumbdir}/${base}.${thumbdir}.jpg")
-                rm "${img}.jpg"
-                echo '<!DOCTYPE html>' > "${thumbdir}/${img}.html"
-                echo '<html lang="en">' >> "${thumbdir}/${img}.html"
-                echo '  <head>' >> "${thumbdir}/${img}.html"
-                echo "    <title>pics from ${title}</title>" >> "${thumbdir}/${img}.html"
-                echo '    <meta charset="utf-8" />' >> "${thumbdir}/${img}.html"
-                echo '        <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> "${thumbdir}/${img}.html"
-                echo "    <link href=\"../${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> "${thumbdir}/${img}.html"
-                echo '  </head>' >> "${thumbdir}/${img}.html"
-                echo '  <body>' >> "${thumbdir}/${img}.html"
-                echo '      <header>' >> "${thumbdir}/${img}.html"
-                echo '      </header>' >> "${thumbdir}/${img}.html"
-                echo '      <div class="full">' >> "${thumbdir}/${img}.html"
-                echo "        <a href=\"${thumbdir}/${img}.html\" class=\"mfp-iframe\"><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
-                echo "        <video src=\"../${img}\" controls>Your browser does not support the video tag</video>" >> "${thumbdir}/${img}.html"
-                echo '      </div>' >> "${thumbdir}/${img}.html"
-                echo '  </body>' >> "${thumbdir}/${img}.html"
-                echo '</html>' >> "${thumbdir}/${img}.html"
+		tn=$(convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg" && echo "${thumbdir}/${base}.${thumbdir}.jpg")
+                echo "      <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogg ]]
               then
@@ -141,25 +129,22 @@ images () {
             fi
         done
         echo '    </div>' >> index.html
-        echo '    <script type="text/javascript">' >> index.html
-        echo '      $(document).ready(function() {' >> index.html
-        echo "        \$('.thumb').magnificPopup({" >> index.html
-        echo "          delegate: 'a'," >> index.html
-        echo "          type: 'image'," >> index.html
-        echo "          disableOn: 767," >> index.html
-        echo '          gallery: {' >> index.html
-        echo '            enabled: true,' >> index.html
-        echo '          },' >> index.html
-	echo "		callbacks: {" >> index.html
-	echo "		  buildControls: function() {" >> index.html
-	echo "		    // re-appends controls inside the main container" >> index.html
-	echo "		    this.contentContainer.append(this.arrowLeft.add(this.arrowRight));" >> index.html
-	echo "		  }" >> index.html
-	echo "		}" >> index.html
-        echo '        });' >> index.html
-        echo '      });' >> index.html
-        echo '    </script>' >> index.html
+        depth=$(awk -F / '{print NF}' <<< "${cdir}")
+        if [[ $depth = 0 ]]
+          then  
+            echo "    <script type=\"text/javascript\" src=\".js/jquery-1.11.1.min.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\".js/blueimp-gallery.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\".js/blueimp-gallery-indicator.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\".js/blueimp-gallery-video.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\".js/jquery.blueimp-gallery.js\"></script>" >> index.html
+          else
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/jquery-1.11.1.min.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery-indicator.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery-video.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/jquery.blueimp-gallery.js\"></script>" >> index.html
         fi
+    fi
 }
 
 footer () {

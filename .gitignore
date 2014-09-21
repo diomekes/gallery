@@ -5,6 +5,6 @@
 !.gitignore
 !README.md
 !gallery
-!.css/
-!.img/
-!.js/
+!.css/*
+!.img/*
+!.js/*

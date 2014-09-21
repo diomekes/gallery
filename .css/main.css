@@ -144,6 +144,12 @@ max-width: 100%;
 height: auto;
 }
 
+[type="video/ogg"] {
+border : 0;
+max-width: 100%;
+max-height: 240px;
+}
+
 /*  MAIN LAYOUT	============================================================================= */
 
 #page {
@@ -166,5 +172,5 @@ height: auto;
 }
 
 footer ul {
-margin-top:1%;
+margin-top:10px;
 }

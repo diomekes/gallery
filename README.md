@@ -7,7 +7,7 @@ Simple bash script that creates a static HTML index file in each subdirectory wi
 
 Requires:
 ---------
-[Magnific-Popup](http://dimsemenov.com/plugins/magnific-popup/)
+[blueimp Gallery](https://github/blueimp/Gallery/)
 
 ffmpeg for video thumbnails
 

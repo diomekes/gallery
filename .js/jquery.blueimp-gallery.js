@@ -30,7 +30,7 @@
     // Global click handler to open links with data-gallery attribute
     // in the Gallery lightbox:
     $(document).on('click', '[data-gallery]', function (event) {
-	if (screen.width > 767) {
+	if ($(window).width() > 767) {
         // Get the container id from the data-gallery attribute:
         var id = $(this).data('gallery'),
             widget = $(id),

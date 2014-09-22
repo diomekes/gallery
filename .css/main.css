@@ -4,7 +4,6 @@
     font-family: 'orbitron-light';
     src: url('fonts/orbitron/orbitron-light.eot');
     src: url('fonts/orbitron/orbitron-light.eot?#iefix') format('embedded-opentype'),
-         url('fonts/orbitron/orbitron-light.woff2') format('woff2'),
          url('fonts/orbitron/orbitron-light.woff') format('woff'),
          url('fonts/orbitron/orbitron-light.ttf') format('truetype'),
          url('fonts/orbitron/orbitron-light.svg#orbitron-light') format('svg');

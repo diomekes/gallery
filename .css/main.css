@@ -32,6 +32,7 @@ margin:5px 0 10px;
 
 footer {
 position:absolute;
+margin-top:10px;
 height:2em;
 width:100%;
 bottom:0;
@@ -168,8 +169,4 @@ max-height: 240px;
 	border-left:1px solid grey; 
 	border-right:1px solid grey;
 	overflow:hidden;
-}
-
-footer ul {
-margin-top:10px;
 }

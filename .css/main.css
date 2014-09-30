@@ -32,9 +32,9 @@ margin:5px 0 10px;
 
 footer {
 position:absolute;
-margin-top:10px;
-height:2em;
+height:1em;
 width:100%;
+margin-bottom:5px;
 bottom:0;
 text-align: left;
 -webkit-transform:rotateY(180deg);
@@ -159,7 +159,7 @@ max-height: 240px;
 }
 
 #content {
-   padding-bottom:2em;
+   padding-bottom:1em;
 }
 
 .list {
@@ -173,7 +173,7 @@ max-height: 240px;
 }
 
 #links {
-	margin:0 auto;
+	margin:0 auto 10px;
 	width:92%;
 	padding:1% 0 1%;
         border-top:1px solid grey;

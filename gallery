@@ -14,10 +14,11 @@ find . -type d \( -path '*/\.*' -o -path "*/${thumbdir}" \) -prune -o -type d -p
     depth=$(awk -F / '{print NF}' <<< "${cdir}")
     dots=$(printf "%0.s../" $(seq $depth))
     files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name "${script}" ! -name README.md)
+    subdirs=$(find . -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}")
     echo "Indexing $(pwd)"
     header
-    images
     directories
+    images
     footer
     cd "$cwd"
 done
@@ -73,19 +74,23 @@ directories () {
 	date=$(awk -F _ '{print $1}' <<< "${dir}")
 	place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /')
         echo '      <div class="list">' >> index.html
-        echo "        <a href=\"${dir}\"><h2>${date}</h2>" >> index.html
         if [[ $place ]]
           then
-            echo -n "        <h3>\"${place}\"</h3>" >> index.html
+            echo "        <a href=\"${dir}\"><h2>${date}</h2>" >> index.html
+            echo "        <h3>\"${place}\"</h3></a>" >> index.html
+	  else
+            echo "        <a href=\"${dir}\"><h2>${date}</h2></a>" >> index.html
         fi
-            echo "        </a>" >> index.html
-        echo '        <ul>' >> index.html
-        find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sort -h | while IFS= read -r subdir
-          do
-            basedir=$(basename "${subdir}")
-            echo "          <li><a href=\"${subdir}\">${basedir}</a></li>" >> index.html
-        done
-        echo '        </ul>' >> index.html
+	if [[ $subdirs ]]
+	  then
+          echo '        <ul>' >> index.html
+          find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sort -h | while IFS= read -r subdir
+            do
+              basedir=$(basename "${subdir}")
+              echo "          <li><a href=\"${subdir}\">${basedir}</a></li>" >> index.html
+          done
+          echo '        </ul>' >> index.html
+	fi
         echo '      </div>' >> index.html
     done
 }
@@ -106,7 +111,7 @@ images () {
         echo '        <a class="play-pause"></a>' >> index.html
         echo '        <ol class="indicator"></ol>' >> index.html
         echo '      </div>' >> index.html
-        echo '    <div id="links">' >> index.html
+        echo '      <div id="links">' >> index.html
         for img in *
           do
             if [[ "$img" = *.jpg ]] || [[ "$img" = *.png ]] || [[ "$img" = *.gif ]]
@@ -114,21 +119,21 @@ images () {
 		base="${img%.*}"
 		ext="${img##*.}"
 		tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}" && echo "${thumbdir}/${base}.${thumbdir}.${ext}")
-                echo "      <a href=\"${img}\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
+                echo "        <a href=\"${img}\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogv ]]
               then
                 ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		base="${img%.*}"
 		tn=$(convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg" && echo "${thumbdir}/${base}.${thumbdir}.jpg")
-                echo "      <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
+                echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogg ]]
               then
                 echo "        <audio src=\"${img}\" controls>Your browser does not support the audio tag</audio>" >> index.html
             fi
         done
-        echo '    </div>' >> index.html
+        echo '      </div>' >> index.html
         depth=$(awk -F / '{print NF}' <<< "${cdir}")
         if [[ $depth = 0 ]]
           then  

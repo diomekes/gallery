@@ -61,7 +61,7 @@ breadcrumbs () {
         popd > /dev/null 2>&1
         echo "        <li class=\"crumb\"><a href=\"$dots\">${here}</a></li>" >> index.html
         echo "        <li class=\"crumb\">// </li>" >> index.html
-        depth=$(( depth = $depth-1 ))
+        depth=$(( $depth-1 ))
     done
         echo "        <li class=\"crumb title\">${title}</li>" >> index.html
         echo '      </ul>' >> index.html

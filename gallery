@@ -74,7 +74,7 @@ directories () {
        find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -rh | while IFS= read -r dir
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")
-            place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /')
+            place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /g')
             echo '      <div class="list">' >> index.html
             if [[ $place ]]
               then
@@ -99,7 +99,7 @@ directories () {
        find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -h | while IFS= read -r dir
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")
-            place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /')
+            place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /g')
             echo '      <div class="list">' >> index.html
             if [[ $place ]]
               then

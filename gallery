@@ -34,10 +34,8 @@ header () {
     if [[ $depth = 0 ]]
       then  
         echo "    <link href=\".css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
-        echo "    <link href=\".css/blueimp-gallery.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
       else
         echo "    <link href=\"${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
-        echo "    <link href=\"${dots}.css/blueimp-gallery.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
     fi
     echo '  </head>' >> index.html
     echo '  <body>' >> index.html
@@ -162,20 +160,6 @@ images () {
             fi
         done
         echo '      </div>' >> index.html
-        if [[ $depth = 0 ]]
-          then  
-            echo "    <script type=\"text/javascript\" src=\".js/jquery-1.11.1.min.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\".js/blueimp-gallery.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\".js/blueimp-gallery-indicator.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\".js/blueimp-gallery-video.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\".js/jquery.blueimp-gallery.js\"></script>" >> index.html
-          else
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/jquery-1.11.1.min.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery-indicator.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery-video.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/jquery.blueimp-gallery.js\"></script>" >> index.html
-        fi
     fi
 }
 
@@ -185,6 +169,14 @@ footer () {
     breadcrumbs
     echo '    </footer>' >> index.html
     echo '    </div>' >> index.html
+        if [[ $depth = 0 ]]
+          then  
+            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\".js/main.js\"></script>" >> index.html
+          else
+            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/main.js\"></script>" >> index.html
+        fi
     echo '  </body>' >> index.html
     echo '</html>' >> index.html
 }

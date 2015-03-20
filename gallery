@@ -162,7 +162,6 @@ images () {
             fi
         done
         echo '      </div>' >> index.html
-        depth=$(awk -F / '{print NF}' <<< "${cdir}")
         if [[ $depth = 0 ]]
           then  
             echo "    <script type=\"text/javascript\" src=\".js/jquery-1.11.1.min.js\"></script>" >> index.html
@@ -181,7 +180,6 @@ images () {
 }
 
 footer () {
-    depth=$(awk -F / '{print NF}' <<< "${cdir}")
     echo '    </div>' >> index.html
     echo '    <footer>' >> index.html
     breadcrumbs

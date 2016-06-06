@@ -144,15 +144,9 @@ images () {
               then
 		base="${img%.*}"
 		ext="${img##*.}"
-#                while getopts ":f" opt; do
-#                  case $opt in
-#                    f)
                 if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
   		      tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}")
-#                    ;;
-#                  esac
-#                done
                 fi
                 echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>" >> index.html
             fi

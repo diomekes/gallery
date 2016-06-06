@@ -18,7 +18,7 @@ find . -type d \( -path '*/\.*' -o -path "*/${thumbdir}" \) -prune -o -type d -p
     echo "Indexing $(pwd)"
     header
     directories
-    images
+    images $1
     footer
     cd "$cwd"
 done
@@ -147,23 +147,23 @@ images () {
 #                while getopts ":f" opt; do
 #                  case $opt in
 #                    f)
-#                if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
-#                  then
+                if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
+                  then
   		      tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}")
 #                    ;;
 #                  esac
 #                done
-#                fi
+                fi
                 echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogv ]]
               then
                 ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		base="${img%.*}"
-#                if [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]] || [[ "$1" = "-f" ]]
-#                  then
+                if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
+                  then
 		    tn=$(convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg")
-#                fi
+                fi
                 echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogg ]]
@@ -193,4 +193,4 @@ footer () {
     echo '</html>' >> index.html
 }
 
-main
+main $1

@@ -144,15 +144,21 @@ images () {
               then
 		base="${img%.*}"
 		ext="${img##*.}"
-		tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}" && echo "${thumbdir}/${base}.${thumbdir}.${ext}")
-                echo "        <a href=\"${img}\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
+                if [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]] || [[ "$1" = "-f" ]]
+                  then
+  		    tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}")
+                fi
+                echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogv ]]
               then
                 ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		base="${img%.*}"
-		tn=$(convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg" && echo "${thumbdir}/${base}.${thumbdir}.jpg")
-                echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"${tn}\" alt=\"${img}\" /></a>" >> index.html
+                if [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]] || [[ "$1" = "-f" ]]
+                  then
+		    tn=$(convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg")
+                fi
+                echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>" >> index.html
             fi
             if [[ "$img" = *.ogg ]]
               then

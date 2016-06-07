@@ -146,7 +146,7 @@ images () {
 		ext="${img##*.}"
                 if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
-  		      tn=$(convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}")
+  		      convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}"
                 fi
                 echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>" >> index.html
             fi
@@ -156,7 +156,7 @@ images () {
 		base="${img%.*}"
                 if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
-		    tn=$(convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg")
+		    convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg"
                 fi
                 echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>" >> index.html
             fi

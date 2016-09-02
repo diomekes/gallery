@@ -15,53 +15,55 @@ find . -type d \( -path '*/\.*' -o -path "*/${thumbdir}" \) -prune -o -type d -p
     files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name "${script}" ! -name README.md)
     subdirs=$(find . -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}")
     echo "Indexing $(pwd)"
-    header
-    directories
-    images "$1"
-    footer
+    header > index.html
+    {
+      directories
+      images "$1"
+      footer
+    } >> index.html
     cd "$cwd" || return
 done
 }
 
 header () {
-    echo '<!DOCTYPE html>' > index.html
-    echo '<html lang="en">' >> index.html
-    echo '  <head>' >> index.html
-    echo "    <title>pics from ${title}</title>" >> index.html
-    echo '    <meta charset="utf-8" />' >> index.html
-    echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> index.html
+    echo '<!DOCTYPE html>'
+    echo '<html lang="en">'
+    echo '  <head>'
+    echo "    <title>pics from ${title}</title>"
+    echo '    <meta charset="utf-8" />'
+    echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">'
     if [[ $depth = 0 ]]
       then  
-        echo "    <link href=\".css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
+        echo "    <link href=\".css/main.css\" rel=\"stylesheet\" type=\"text/css\" />"
       else
-        echo "    <link href=\"${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />" >> index.html
+        echo "    <link href=\"${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />"
     fi
-    echo '  </head>' >> index.html
-    echo '  <body>' >> index.html
-    echo '    <div id="page">' >> index.html
-    echo '    <header>' >> index.html
+    echo '  </head>'
+    echo '  <body>'
+    echo '    <div id="page">'
+    echo '    <header>'
     breadcrumbs
-    echo '    </header>' >> index.html
-    echo '    <div id="content">' >> index.html
+    echo '    </header>'
+    echo '    <div id="content">'
 }
 
 breadcrumbs () {
     if [[ $depth != 0 ]]
       then
-        echo '      <ul class="breadcrumb">' >> index.html
-        echo "        <li class=\"crumb\">// </li>" >> index.html
+        echo '      <ul class="breadcrumb">'
+        echo "        <li class=\"crumb\">// </li>"
     until [ "$depth" = 0 ]
       do
         local dots=$(printf "%0.s../" $(seq "$depth"))
         pushd "$dots" > /dev/null 2>&1
         here=$(awk -F/ '{ print $NF }' <<< "$PWD")
         popd > /dev/null 2>&1
-        echo "        <li class=\"crumb\"><a href=\"$dots\">${here}</a></li>" >> index.html
-        echo "        <li class=\"crumb\">// </li>" >> index.html
+        echo "        <li class=\"crumb\"><a href=\"$dots\">${here}</a></li>"
+        echo "        <li class=\"crumb\">// </li>"
         local depth=$(( depth - 1 ))
     done
-        echo "        <li class=\"crumb title\">${title}</li>" >> index.html
-        echo '      </ul>' >> index.html
+        echo "        <li class=\"crumb title\">${title}</li>"
+        echo '      </ul>'
     fi
 }
 
@@ -72,50 +74,50 @@ directories () {
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")
             place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /g')
-            echo '      <div class="list">' >> index.html
+            echo '      <div class="list">'
             if [[ $place ]]
               then
-                echo "        <a href=\"${dir}\"><h2>${date}</h2>" >> index.html
-                echo "        <h3>\"${place}\"</h3></a>" >> index.html
+                echo "        <a href=\"${dir}\"><h2>${date}</h2>"
+                echo "        <h3>\"${place}\"</h3></a>"
     	  else
-                echo "        <a href=\"${dir}\"><h2>${date}</h2></a>" >> index.html
+                echo "        <a href=\"${dir}\"><h2>${date}</h2></a>"
             fi
     	if [[ $subdirs ]]
     	  then
-              echo '        <ul>' >> index.html
+              echo '        <ul>'
               find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sort -h | while IFS= read -r subdir
                 do
                   basedir=$(basename "${subdir}")
-                  echo "          <li><a href=\"${subdir}\">${basedir}</a></li>" >> index.html
+                  echo "          <li><a href=\"${subdir}\">${basedir}</a></li>"
               done
-              echo '        </ul>' >> index.html
+              echo '        </ul>'
     	fi
-            echo '      </div>' >> index.html
+            echo '      </div>'
         done
      else
        find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -h | while IFS= read -r dir
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")
             place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /g')
-            echo '      <div class="list">' >> index.html
+            echo '      <div class="list">'
             if [[ $place ]]
               then
-                echo "        <a href=\"${dir}\"><h2>${date}</h2>" >> index.html
-                echo "        <h3>\"${place}\"</h3></a>" >> index.html
+                echo "        <a href=\"${dir}\"><h2>${date}</h2>"
+                echo "        <h3>\"${place}\"</h3></a>"
           else
-                echo "        <a href=\"${dir}\"><h2>${date}</h2></a>" >> index.html
+                echo "        <a href=\"${dir}\"><h2>${date}</h2></a>"
             fi
             if [[ $subdirs ]]
               then
-              echo '        <ul>' >> index.html
+              echo '        <ul>'
               find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sort -h | while IFS= read -r subdir
                 do
                   basedir=$(basename "${subdir}")
-                  echo "          <li><a href=\"${subdir}\">${basedir}</a></li>" >> index.html
+                  echo "          <li><a href=\"${subdir}\">${basedir}</a></li>"
               done
-              echo '        </ul>' >> index.html
+              echo '        </ul>'
             fi
-            echo '      </div>' >> index.html
+            echo '      </div>'
         done
    fi
 }
@@ -127,16 +129,16 @@ images () {
 	  then
             mkdir "${thumbdir}"
         fi
-        echo '      <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">' >> index.html
-        echo '        <div class="slides"></div>' >> index.html
-        echo '        <h3 class="title">Links</h3>' >> index.html
-        echo '        <a class="prev">‹</a>' >> index.html
-        echo '        <a class="next">›</a>' >> index.html
-        echo '        <a class="close">×</a>' >> index.html
-        echo '        <a class="play-pause"></a>' >> index.html
-        echo '        <ol class="indicator"></ol>' >> index.html
-        echo '      </div>' >> index.html
-        echo '      <div id="links">' >> index.html
+        echo '      <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">'
+        echo '        <div class="slides"></div>'
+        echo '        <h3 class="title">Links</h3>'
+        echo '        <a class="prev">‹</a>'
+        echo '        <a class="next">›</a>'
+        echo '        <a class="close">×</a>'
+        echo '        <a class="play-pause"></a>'
+        echo '        <ol class="indicator"></ol>'
+        echo '      </div>'
+        echo '      <div id="links">'
         for img in *
           do
             if [[ "$img" = *.jpg ]] || [[ "$img" = *.png ]] || [[ "$img" = *.gif ]]
@@ -147,7 +149,7 @@ images () {
                   then
   		      convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}"
                 fi
-                echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>" >> index.html
+                echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>"
             fi
             if [[ "$img" = *.ogv ]]
               then
@@ -157,33 +159,33 @@ images () {
                   then
 		    convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg"
                 fi
-                echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>" >> index.html
+                echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>"
             fi
             if [[ "$img" = *.ogg ]]
               then
-                echo "        <audio src=\"${img}\" controls>Your browser does not support the audio tag</audio>" >> index.html
+                echo "        <audio src=\"${img}\" controls>Your browser does not support the audio tag</audio>"
             fi
         done
-        echo '      </div>' >> index.html
+        echo '      </div>'
     fi
 }
 
 footer () {
-    echo '    </div>' >> index.html
-    echo '    <footer>' >> index.html
+    echo '    </div>'
+    echo '    <footer>'
     breadcrumbs
-    echo '    </footer>' >> index.html
-    echo '    </div>' >> index.html
+    echo '    </footer>'
+    echo '    </div>'
         if [[ $depth = 0 ]]
           then  
-            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\".js/main.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>"
+            echo "    <script type=\"text/javascript\" src=\".js/main.js\"></script>"
           else
-            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>" >> index.html
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/main.js\"></script>" >> index.html
+            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>"
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/main.js\"></script>"
         fi
-    echo '  </body>' >> index.html
-    echo '</html>' >> index.html
+    echo '  </body>'
+    echo '</html>'
 }
 
 main "$1"

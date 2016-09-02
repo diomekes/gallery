@@ -8,19 +8,18 @@ main () {
 cwd=$(pwd)
 find . -type d \( -path '*/\.*' -o -path "*/${thumbdir}" \) -prune -o -type d -print | sed -e 's/.//' -e 's/\///' | sort | while IFS= read -r cdir
   do
-    cd "${cdir}"
+    cd "${cdir}" || return
     title=$(awk -F / '{print $NF}' <<< "${cdir}")
-    css=$(sed -e 's/\/[^\/]*/\/../g' -e 's/.\///' <<< "${cdir}")
     depth=$(awk -F / '{print NF}' <<< "${cdir}")
-    dots=$(printf "%0.s../" $(seq $depth))
+    dots=$(printf "%0.s../" $(seq "$depth"))
     files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name "${script}" ! -name README.md)
     subdirs=$(find . -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}")
     echo "Indexing $(pwd)"
     header
     directories
-    images $1
+    images "$1"
     footer
-    cd "$cwd"
+    cd "$cwd" || return
 done
 }
 
@@ -51,15 +50,15 @@ breadcrumbs () {
       then
         echo '      <ul class="breadcrumb">' >> index.html
         echo "        <li class=\"crumb\">// </li>" >> index.html
-    until [ $depth = 0 ]
+    until [ "$depth" = 0 ]
       do
-        local dots=$(printf "%0.s../" $(seq $depth))
-        pushd $dots > /dev/null 2>&1
-        here=$(awk -F/ '{ print $NF }' <<< $PWD)
+        local dots=$(printf "%0.s../" $(seq "$depth"))
+        pushd "$dots" > /dev/null 2>&1
+        here=$(awk -F/ '{ print $NF }' <<< "$PWD")
         popd > /dev/null 2>&1
         echo "        <li class=\"crumb\"><a href=\"$dots\">${here}</a></li>" >> index.html
         echo "        <li class=\"crumb\">// </li>" >> index.html
-        local depth=$(( $depth-1 ))
+        local depth=$(( depth - 1 ))
     done
         echo "        <li class=\"crumb title\">${title}</li>" >> index.html
         echo '      </ul>' >> index.html
@@ -187,4 +186,4 @@ footer () {
     echo '</html>' >> index.html
 }
 
-main $1
+main "$1"

@@ -14,7 +14,7 @@
 
 /* BASIC PAGE SETUP ============================================================================= */
 
-html { 
+html {
 height:100%;
 margin: 0;
 padding: 0;
@@ -61,29 +61,30 @@ line-height : 1.4;
 
 
 h2 { 
-font-size : 2.6em; /* 40 / 16 */
+font-size : 2.2em; /* 40 / 16 */
 line-height : 1.1;
 margin: 5px;
 }
 
 h2 a { 
-color : #336e33;
 transition: all 0.3s ease;
 text-decoration: none;
 }
 
 h2 a:visited { 
-color : #004b00; }
+}
 
 h2 a:hover, 
 h2 a:active { 
-color : #80a480;
 }
 
 h3 { 
-margin-bottom : 0.3em;
-font-size : 1.2em; /* 28 / 16 */
+font-size : 1.4em; /* 28 / 16 */
 line-height : 1.1; 
+}
+
+h3.break {
+line-height:1;
 }
 
 h4 { 
@@ -114,6 +115,10 @@ display:inline-block;
 
 li.title {
 color:#1e90ff;
+}
+
+li.break {
+line-height: 0;
 }
 
 /* LINKS =============================================================================  */

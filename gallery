@@ -73,50 +73,46 @@ directories () {
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")
             place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /g')
-            echo '      <div class="list">'
+            echo '      <ul class=list>'
             if [[ $place ]]
               then
-                echo "        <a href=\"${dir}\"><h2>${date}</h2>"
-                echo "        <h3>\"${place}\"</h3></a>"
+                echo "        <li class=\"break\"><a href=\"${dir}\"><h2>${date}</h2><br>"
+                echo "        <h3 class=\"break\">\"${place}\"</h3></a></li>"
     	  else
-                echo "        <a href=\"${dir}\"><h2>${date}</h2></a>"
+                echo "        <li><h2><a href=\"${dir}\">${date}</a></h2></li>"
             fi
     	if [[ $subdirs ]]
     	  then
-              echo '        <ul>'
               find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sort -h | while IFS= read -r subdir
                 do
                   basedir=$(basename "${subdir}")
                   echo "          <li><a href=\"${subdir}\">${basedir}</a></li>"
               done
-              echo '        </ul>'
     	fi
-            echo '      </div>'
+            echo '      </ul>'
         done
      else
        find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -h | while IFS= read -r dir
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")
             place=$(echo "${dir}" | awk -F _ '{print $2}' | sed 's/-/ /g')
-            echo '      <div class="list">'
+            echo '      <ul class=list>'
             if [[ $place ]]
               then
-                echo "        <a href=\"${dir}\"><h2>${date}</h2>"
-                echo "        <h3>\"${place}\"</h3></a>"
+                echo "        <li class=\"break\"><a href=\"${dir}\"><h2>${date}</h2><br>"
+                echo "        <h3 class=\"break\">\"${place}\"</h3></a></li>"
           else
-                echo "        <a href=\"${dir}\"><h2>${date}</h2></a>"
+                echo "        <li><h2><a href=\"${dir}\">${date}</a></h2></li>"
             fi
             if [[ $subdirs ]]
               then
-              echo '        <ul>'
               find "$dir" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sort -h | while IFS= read -r subdir
                 do
                   basedir=$(basename "${subdir}")
                   echo "          <li><a href=\"${subdir}\">${basedir}</a></li>"
               done
-              echo '        </ul>'
             fi
-            echo '      </div>'
+            echo '      </ul>'
         done
    fi
 }

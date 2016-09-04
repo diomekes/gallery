@@ -40,11 +40,10 @@ header () {
     fi
     echo '  </head>'
     echo '  <body>'
-    echo '    <div id="page">'
     echo '    <header>'
     breadcrumbs
     echo '    </header>'
-    echo '    <div id="content">'
+    echo '    <main>'
 }
 
 breadcrumbs () {
@@ -147,16 +146,18 @@ images () {
 		ext="${img##*.}"
                 if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
+                      rm -rf "${thumbdir}"
   		      convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}"
                 fi
                 echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>"
             fi
             if [[ "$img" = *.ogv ]]
               then
-                ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		base="${img%.*}"
                 if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
+                    rm -rf "${thumbdir}"
+                    ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		    convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg"
                 fi
                 echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>"
@@ -171,11 +172,10 @@ images () {
 }
 
 footer () {
-    echo '    </div>'
+    echo '    </main>'
     echo '    <footer>'
     breadcrumbs
     echo '    </footer>'
-    echo '    </div>'
         if [[ $depth = 0 ]]
           then  
             echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>"

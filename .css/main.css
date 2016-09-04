@@ -14,8 +14,7 @@
 
 /* BASIC PAGE SETUP ============================================================================= */
 
-html,
-body { 
+html { 
 height:100%;
 margin: 0;
 padding: 0;
@@ -151,13 +150,14 @@ max-height: 240px;
 
 /*  MAIN LAYOUT	============================================================================= */
 
-#page {
-   min-height:100%;
+body {
+   min-height:99%;
    position:relative;
-   overflow:hidden;
+   margin: 0;
+   padding: 0;
 }
 
-#content {
+main {
    padding-bottom:1.625em;
 }
 

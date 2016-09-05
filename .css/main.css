@@ -180,8 +180,8 @@ main {
 	margin:0 auto 15px;
 	width:92%;
 	padding:1% 0 1%;
-        border-top:1px solid grey;
         border-bottom:1px solid grey;
+        border-top:1px solid grey;
 }
 
 /* blueimp Gallery ========================================================================== */

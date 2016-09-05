@@ -126,6 +126,7 @@ images () {
         elif [ "$1" = "force" ]
           then
             rm -rf "${thumbdir}"
+            mkdir "${thumbdir}"
         fi
         echo '      <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">'
         echo '        <div class="slides"></div>'
@@ -143,7 +144,7 @@ images () {
               then
 		base="${img%.*}"
 		ext="${img##*.}"
-                if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
+                if [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
   		      convert "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}"
                 fi
@@ -152,7 +153,7 @@ images () {
             if [[ "$img" = *.ogv ]]
               then
 		base="${img%.*}"
-                if [ "$1" = "force" ] || [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
+                if [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
                     ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		    convert "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg"

@@ -53,7 +53,8 @@ breadcrumbs () {
         echo "        <li class=\"crumb\">// </li>"
     until [ "$depth" = 0 ]
       do
-        local dots=$(printf "%0.s../" $(seq "$depth"))
+        local dots
+        dots=$(printf "%0.s../" $(seq "$depth"))
         pushd "$dots" > /dev/null 2>&1
         here=$(awk -F/ '{ print $NF }' <<< "$PWD")
         popd > /dev/null 2>&1
@@ -176,10 +177,10 @@ footer () {
     echo '    </footer>'
         if [[ $depth = 0 ]]
           then  
-            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>"
+            echo "    <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-1.12.4.min.js\"></script>"
             echo "    <script type=\"text/javascript\" src=\".js/main.js\"></script>"
           else
-            echo "    <script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>"
+            echo "    <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-1.12.4.min.js\"></script>"
             echo "    <script type=\"text/javascript\" src=\"${dots}.js/main.js\"></script>"
         fi
     echo '  </body>'

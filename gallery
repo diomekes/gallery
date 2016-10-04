@@ -147,6 +147,7 @@ images () {
 		ext="${img##*.}"
                 if [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
                   then
+                      jhead -autorot "${img}" > /dev/null
   		      convert -auto-orient "${img}" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.${ext}"
                 fi
                 echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>"

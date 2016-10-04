@@ -12,3 +12,5 @@ Requires:
 ffmpeg for video thumbnails
 
 convert from ImageMagick
+
+jhead

@@ -12,7 +12,7 @@ find . -type d \( -path '*/\.*' -o -path "*/${thumbdir}" \) -prune -o -type d -p
     title=$(awk -F / '{print $NF}' <<< "${cdir}")
     depth=$(awk -F / '{print NF}' <<< "${cdir}")
     dots=$(printf "%0.s../" $(seq "$depth"))
-    files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name "${script}" ! -name README.md)
+    files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name "${script}" ! -name README.md ! -name "*.map.js")
     subdirs=$(find . -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}")
     echo "Indexing $(pwd)"
     header > index.html
@@ -37,6 +37,11 @@ header () {
         echo "    <link href=\".css/main.css\" rel=\"stylesheet\" type=\"text/css\" />"
       else
         echo "    <link href=\"${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />"
+    fi
+    if [ -f *.map.js ]
+      then
+        echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/leaflet.css\" />"
+        echo "    <script type=\"text/javascript\" src=\"${dots}.js/leaflet.js\"></script>"
     fi
     echo '  </head>'
     echo '  <body>'
@@ -93,6 +98,14 @@ directories () {
             echo '      </ul>'
         done
      else
+       if [ -f *.map.js ]
+         then
+           for script in *.map.js
+             do
+               echo "    <div id=\"map\"></div>"
+               echo "    <script src=\"${script}\" type=\"text/javascript\"></script>"
+           done
+       fi
        find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -h | while IFS= read -r dir
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")

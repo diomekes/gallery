@@ -38,6 +38,10 @@ header () {
       else
         echo "    <link href=\"${dots}.css/main.css\" rel=\"stylesheet\" type=\"text/css\" />"
     fi
+    if [[ $files ]]
+      then
+        echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/blueimp-gallery.min.css\" />"
+    fi
     if [ -f *.map.js ]
       then
         echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/leaflet.css\" />"
@@ -102,8 +106,8 @@ directories () {
          then
            for script in *.map.js
              do
-               echo "    <div id=\"map\"></div>"
-               echo "    <script src=\"${script}\" type=\"text/javascript\"></script>"
+               echo "      <div id=\"map\"></div>"
+               echo "      <script src=\"${script}\" type=\"text/javascript\"></script>"
            done
        fi
        find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -h | while IFS= read -r dir
@@ -189,13 +193,10 @@ footer () {
     echo '    <footer>'
     breadcrumbs
     echo '    </footer>'
-        if [[ $depth = 0 ]]
+        if [[ $files ]]
           then  
             echo "    <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-1.12.4.min.js\"></script>"
-            echo "    <script type=\"text/javascript\" src=\".js/main.js\"></script>"
-          else
-            echo "    <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-1.12.4.min.js\"></script>"
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/main.js\"></script>"
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery.js\"></script>"
         fi
     echo '  </body>'
     echo '</html>'

@@ -14,3 +14,5 @@ ffmpeg for video thumbnails
 convert from ImageMagick
 
 jhead
+
+[leaflet] (http://leafletjs.com/)

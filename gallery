@@ -42,11 +42,14 @@ header () {
       then
         echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/blueimp-gallery.min.css\" />"
     fi
-    if [ -f *.map.js ]
-      then
-        echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/leaflet.css\" />"
-        echo "    <script type=\"text/javascript\" src=\"${dots}.js/leaflet.js\"></script>"
-    fi
+    for map in *.map.js
+      do
+        if [ -f "$map" ]
+          then
+            echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/leaflet.css\" />"
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/leaflet.js\"></script>"
+        fi
+    done
     echo '  </head>'
     echo '  <body>'
     echo '    <header>'
@@ -102,14 +105,14 @@ directories () {
             echo '      </ul>'
         done
      else
-       if [ -f *.map.js ]
-         then
-           for script in *.map.js
-             do
-               echo "      <div id=\"map\"></div>"
-               echo "      <script src=\"${script}\" type=\"text/javascript\"></script>"
-           done
-       fi
+       for map in *.map.js
+         do
+           if [ -f "$map" ]
+             then
+                 echo "      <div id=\"map\"></div>"
+                 echo "      <script src=\"${map}\" type=\"text/javascript\"></script>"
+           fi
+       done
        find . -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}" | sed -e 's/.//' -e 's/\///' | sort -h | while IFS= read -r dir
           do
             date=$(awk -F _ '{print $1}' <<< "${dir}")

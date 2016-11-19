@@ -48,6 +48,8 @@ header () {
           then
             echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/leaflet.css\" />"
             echo "    <script type=\"text/javascript\" src=\"${dots}.js/leaflet.js\"></script>"
+            echo "    <link rel=\"stylesheet\" type=\"text/css\" href=\"${dots}.css/leaflet-measure-path.css\" />"
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/leaflet-measure-path.js\"></script>"
         fi
     done
     echo '  </head>'

@@ -12,7 +12,7 @@ find . -type d \( -path '*/\.*' -o -path "*/${thumbdir}" \) -prune -o -type d -p
     title=$(awk -F / '{print $NF}' <<< "${cdir}")
     depth=$(awk -F / '{print NF}' <<< "${cdir}")
     dots=$(printf "%0.s../" $(seq "$depth"))
-    files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name index.html ! -name "${script}" ! -name README.md ! -name "*.map.js")
+    files=$(find . -maxdepth 1 -type f ! -name ".*" ! -name "*.html" ! -name "${script}" ! -name README.md ! -name "*.map.js")
     subdirs=$(find . -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "${thumbdir}")
     echo "Indexing $(pwd)"
     header > index.html

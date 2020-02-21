@@ -174,7 +174,7 @@ images () {
                 fi
                 echo "        <a href=\"${img}\" data-gallery><img src=\"${thumbdir}/${base}.${thumbdir}.${ext}\" alt=\"${img}\" /></a>"
             fi
-            if [[ "$img" = *.ogv ]]
+            if [[ "$img" = *.webm ]]
               then
 		base="${img%.*}"
                 if [[ ! -f "$thumbdir/${base}.${thumbdir}.${ext}" ]]
@@ -182,7 +182,7 @@ images () {
                     ffmpeg -loglevel panic -n -i "$img" -ss 00:00:0.635 -f image2 -vframes 1 "${thumbdir}/${img}.jpg" < /dev/null
 		    convert -auto-orient "${thumbdir}/${img}.jpg" -thumbnail "${thumbgeom}^" -gravity center -extent "${thumbgeom}" "$thumbdir/${base}.${thumbdir}.jpg"
                 fi
-                echo "        <a href=\"${img}\" type=\"video/ogg\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>"
+                echo "        <a href=\"${img}\" type=\"video/webm\" data-poster=\"${thumbdir}/${img}.jpg\" data-gallery><img src=\"$thumbdir/${base}.${thumbdir}.jpg\" alt=\"${img}\" /></a>"
             fi
             if [[ "$img" = *.ogg ]]
               then

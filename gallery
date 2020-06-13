@@ -202,6 +202,7 @@ footer () {
           then  
             echo "    <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-1.12.4.min.js\"></script>"
             echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery.js\"></script>"
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/jquery.blueimp-gallery.js\"></script>"
         fi
     echo '  </body>'
     echo '</html>'

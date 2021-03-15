@@ -151,13 +151,13 @@ images () {
             rm -rf "${thumbdir}"
             mkdir "${thumbdir}"
         fi
-        echo '      <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">'
-        echo '        <div class="slides"></div>'
-        echo '        <h3 class="title">Links</h3>'
-        echo '        <a class="prev">‹</a>'
-        echo '        <a class="next">›</a>'
-        echo '        <a class="close">×</a>'
-        echo '        <a class="play-pause"></a>'
+        echo '      <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" aria-label="image gallery" aria-modal="true" role="dialog">'
+        echo '        <div class="slides" aria-live="polite"></div>'
+        echo '        <h3 class="title"></h3>'
+        echo '        <a class="prev" aria-controls="blueimp-gallery" aria-label="previous slide" aria-keyshortcuts="ArrowLeft"></a>'
+        echo '        <a class="next" aria-controls="blueimp-gallery" aria-label="next slide" aria-keyshortcuts="ArrowRight"></a>'
+        echo '        <a class="close" aria-controls="blueimp-gallery" aria-label="close" aria-keyshortcuts="Escape"></a>'
+        echo '        <a class="play-pause" aria-controls="blueimp-gallery" aria-label="play slideshow" aria-keyshortcuts="Space" aria-pressed="false" role="button"></a>'
         echo '        <ol class="indicator"></ol>'
         echo '      </div>'
         echo '      <div id="links">'
@@ -200,9 +200,17 @@ footer () {
     echo '    </footer>'
         if [[ $files ]]
           then  
-            echo "    <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-1.12.4.min.js\"></script>"
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery.js\"></script>"
-            echo "    <script type=\"text/javascript\" src=\"${dots}.js/jquery.blueimp-gallery.js\"></script>"
+            echo "    <script type=\"text/javascript\" src=\"${dots}.js/blueimp-gallery.min.js\"></script>"
+            echo "    <script>"
+            echo "      document.getElementById('links').onclick = function (event) {"
+            echo "        event = event || window.event"
+            echo "        var target = event.target || event.srcElement"
+            echo "         var link = target.src ? target.parentNode : target"
+            echo "         var options = { index: link, event: event }"
+            echo "         var links = this.getElementsByTagName('a')"
+            echo "         blueimp.Gallery(links, options)"
+            echo "      }"
+            echo "    </script>"
         fi
     echo '  </body>'
     echo '</html>'
